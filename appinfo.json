@@ -1,0 +1,32 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "gogothegogo",
+    "enableMultiJS": true,
+    "longName": "Roundish",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "characterRegex": "[0-9:.]",
+                "file": "fonts/Tallpix.ttf",
+                "name": "FONT_TALLPIX_48",
+                "targetPlatforms": null,
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Roundish",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "69eccc60-a99d-4b74-8bf7-da862d6f4b1d",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
