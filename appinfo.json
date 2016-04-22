@@ -10,20 +10,53 @@
     "resources": {
         "media": [
             {
-                "file": "images/background_pillow3.png",
-                "name": "IMAGE_BACKGROUND_PILLOW3",
+                "characterRegex": "[0-9: ]",
+                "file": "fonts/Tallpix_huge.ttf",
+                "name": "FONT_TALLPIX_90",
+                "targetPlatforms": null,
+                "type": "font"
+            },
+            {
+                "characterRegex": "[0-9: ]",
+                "file": "fonts/Tallpix_large.ttf",
+                "name": "FONT_TALLPIX_74",
+                "targetPlatforms": null,
+                "type": "font"
+            },
+            {
+                "characterRegex": "[0-9: ]",
+                "file": "fonts/Tallpix_small.ttf",
+                "name": "FONT_TALLPIX_48",
+                "targetPlatforms": null,
+                "type": "font"
+            },
+            {
+                "file": "images/pillow.png",
+                "name": "IMAGE_BACKGROUND_PILLOW",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
-                "file": "images/background_pillow2.png",
-                "name": "IMAGE_BACKGROUND_PILLOW2",
+                "file": "images/battery_halfempty.png",
+                "name": "IMAGE_BATTERY_HALFEMPTY",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/battery_empty.png",
+                "name": "IMAGE_BATTERY_EMPTY",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/bluetooth.png",
+                "name": "IMAGE_BLUETOOTH",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
                 "file": "images/background_pillow.png",
-                "name": "IMAGE_BACKGROUND_PILLOW",
+                "name": "IMAGE_BACKGROUND_PILLOW1",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
@@ -48,9 +81,9 @@
                 "type": "bitmap"
             },
             {
-                "characterRegex": "[0-9:.]",
+                "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix.ttf",
-                "name": "FONT_TALLPIX_56",
+                "name": "FONT_TALLPIX_64",
                 "targetPlatforms": null,
                 "type": "font"
             }
