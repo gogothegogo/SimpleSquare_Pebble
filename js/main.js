@@ -38,7 +38,7 @@ function getAndStoreConfigData() {
   var $batteryIcon = $('#batteryIcon');
 
   var options = {
-    colorTheme: $colorTheme.selected,
+    colorTheme: $colorTheme.val(),
     timeSize: $timeSize.val(),
     dateSize: $dateSize.val(),
     bluetoothAlarm: $bluetoothAlarm.val(),
