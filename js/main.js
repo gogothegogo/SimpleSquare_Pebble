@@ -17,8 +17,9 @@ function submitHandler() {
 function loadOptions() {
   var $colorTheme = $('#colorTheme');
   var $timeSize = $('#timeSize');
-  var $timeSize = $('#timeSize');
-  var $timeSize = $('#timeSize');
+  var $dateSize = $('#dateSize');
+  var $bluetoothAlarm = $('#bluetoothAlarm');
+  var $batteryIcon = $('#batteryIcon');
 
   if (localStorage.backgroundColor) {
     $backgroundColorPicker[0].value = localStorage.backgroundColor;
@@ -28,6 +29,9 @@ function loadOptions() {
 
 function getAndStoreConfigData() {
   var $backgroundColorPicker = $('#backgroundColorPicker');
+  var $timeFormatCheckbox = $('#timeFormatCheckbox');
+  var $timeFormatCheckbox = $('#timeFormatCheckbox');
+  var $timeFormatCheckbox = $('#timeFormatCheckbox');
   var $timeFormatCheckbox = $('#timeFormatCheckbox');
 
   var options = {
