@@ -10,6 +10,12 @@
     "resources": {
         "media": [
             {
+                "file": "images/battery_charging.png",
+                "name": "IMAGE_BATTERY_CHARGING",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
                 "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix_huge.ttf",
                 "name": "FONT_TALLPIX_90",

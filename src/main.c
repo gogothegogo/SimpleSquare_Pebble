@@ -1,8 +1,10 @@
 #include <pebble.h>
 
-#define COLOR_THEME 3 //0 debug mode text layer visible, 1 black with white text, 2 white with black text, 3 backgroung image
+#define COLOR_THEME 1 //0 debug mode text layer visible, 1 black with white text, 2 white with black text, 3 backgroung image
 #define TIME_SIZE 3 //1 small, 2 medium, 3 large, 4 huge
 #define DATE_SIZE 2 //0 no date, 1 small, 2 medium, 3 large
+#define BLUETOOTH_ALARM 2 //0 off, 1 icon, 2 icon+alarm
+#define BATTERY_ICON 1 //0 off, 1 on
 
 static Window *s_main_window;
 static TextLayer *s_time_layer, *s_date_layer;
@@ -12,9 +14,8 @@ static GColor color_time_text;
 static GColor color_time_textlayer;
 static GColor color_date_text;
 static GColor color_date_textlayer;
-static BitmapLayer *s_background_layer;
-static GBitmap *s_background_bitmap;
-//static int time_text_layer_height = 72;
+static BitmapLayer *s_background_layer, *s_bt_icon_layer, *s_battery_layer;
+static GBitmap *s_background_bitmap, *s_bt_icon_bitmap, *s_battery_empty_bitmap, *s_battery_halfempty_bitmap, *s_battery_charging_bitmap;
 static int time_position_offset_withdate = 0;
 static GAlign background_bitmap_alignment;
 
@@ -42,6 +43,40 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
 }
 
+#if BLUETOOTH_ALARM > 0
+static void bluetooth_callback(bool connected) {
+  // Show icon if disconnected
+  layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connected);
+#if BLUETOOTH_ALARM == 2
+  if(connected) {
+    // Issue a vibrating alert
+    vibes_double_pulse();
+  } else {
+    // Issue a vibrating alert
+    vibes_double_pulse();
+  }
+#endif
+}
+#endif
+
+#if BATTERY_ICON == 1
+static void battery_callback(BatteryChargeState state) {
+  if (state.is_charging) {
+    bitmap_layer_set_bitmap(s_battery_layer, s_battery_charging_bitmap);
+    } else if (state.charge_percent <= 10) {
+    bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);     
+    } else if (state.charge_percent <= 20) {
+    bitmap_layer_set_bitmap(s_battery_layer, s_battery_halfempty_bitmap);            
+    } else {
+    layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
+    return;
+  }
+  layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), false);
+}
+#endif
+
+
+
 static void main_window_load(Window *window) {
   // Get information about the Window
   Layer *window_layer = window_get_root_layer(window);
@@ -49,7 +84,7 @@ static void main_window_load(Window *window) {
 
 #if COLOR_THEME == 3
   // Create GBitmap
-  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND_PILLOW);
+  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND_CIRCLE);
   //create bitmap layer
   s_background_layer = bitmap_layer_create(bounds);
   // Set the bitmap onto the layer and add to the window
@@ -98,6 +133,30 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
 #endif
+  
+#if BLUETOOTH_ALARM > 0
+  // Create the Bluetooth icon GBitmap
+  s_bt_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BLUETOOTH);
+  // Create the BitmapLayer to display the GBitmap
+  s_bt_icon_layer = bitmap_layer_create(GRect(3, 3, 8, 13));
+   //bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpAssignInverted);
+  bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bt_icon_layer));
+  // Show the correct state of the BT connection from the start
+  layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connection_service_peek_pebble_app_connection() ? true : false);
+#endif
+  
+#if BATTERY_ICON == 1
+  // Create the Battery icon GBitmap
+  s_battery_charging_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_CHARGING);
+  s_battery_empty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_EMPTY);
+  s_battery_halfempty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HALFEMPTY);
+  // Create the BitmapLayer to display the GBitmap
+  s_battery_layer = bitmap_layer_create(GRect(144-3-15, 6, 15, 8));
+  //bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
+  layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
+#endif
 }
 
 static void main_window_unload(Window *window) {
@@ -115,6 +174,17 @@ static void main_window_unload(Window *window) {
   gbitmap_destroy(s_background_bitmap);
   //Destroy BitmapLayer
   bitmap_layer_destroy(s_background_layer);
+#endif
+
+#if BLUETOOTH_ALARM > 0
+  gbitmap_destroy(s_bt_icon_bitmap);
+  bitmap_layer_destroy(s_bt_icon_layer);
+#endif
+  
+#if BATTERY_ICON == 1
+  gbitmap_destroy(s_battery_halfempty_bitmap);
+  gbitmap_destroy(s_battery_empty_bitmap);
+  bitmap_layer_destroy(s_battery_layer);
 #endif
 
 }
@@ -177,6 +247,17 @@ static void init() {
 
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  
+#if BLUETOOTH_ALARM > 0
+  // Register for Bluetooth connection updates
+  bluetooth_connection_service_subscribe(bluetooth_callback);
+  //connection_service_subscribe( (ConnectionHandlers) {.pebble_app_connection_handler = bluetooth_callback} );
+#endif
+  
+#if BATTERY_ICON == 1
+  // Register for battery level updates
+  battery_state_service_subscribe(battery_callback);
+#endif
 }
 
 static void deinit() {
