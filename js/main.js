@@ -21,26 +21,35 @@ function loadOptions() {
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
 
-  if (localStorage.backgroundColor) {
-    $backgroundColorPicker[0].value = localStorage.backgroundColor;
-    $timeFormatCheckbox[0].checked = localStorage.twentyFourHourFormat === 'true';
+  if (localStorage.colorTheme) {
+    $colorTheme[0].value = localStorage.colorTheme;
+    $timeSize[0].value = localStorage.timeSize;
+    $dateSize[0].value = localStorage.dateSize;
+    $bluetoothAlarm[0].value = localStorage.bluetoothAlarm;
+    $batteryIcon[0].checked = localStorage.batteryIcon === 'true';
   }
 }
 
 function getAndStoreConfigData() {
-  var $backgroundColorPicker = $('#backgroundColorPicker');
-  var $timeFormatCheckbox = $('#timeFormatCheckbox');
-  var $timeFormatCheckbox = $('#timeFormatCheckbox');
-  var $timeFormatCheckbox = $('#timeFormatCheckbox');
-  var $timeFormatCheckbox = $('#timeFormatCheckbox');
+  var $colorTheme = $('#colorTheme');
+  var $timeSize = $('#timeSize');
+  var $dateSize = $('#dateSize');
+  var $bluetoothAlarm = $('#bluetoothAlarm');
+  var $batteryIcon = $('#batteryIcon');
 
   var options = {
-    backgroundColor: $backgroundColorPicker.val(),
-    twentyFourHourFormat: $timeFormatCheckbox[0].checked
+    colorTheme: $colorTheme.val(),
+    timeSize: $timeSize.val(),
+    dateSize: $dateSize.val(),
+    bluetoothAlarm: $bluetoothAlarm.val(),
+    batteryIcon: $batteryIcon[0].checked
   };
 
-  localStorage.backgroundColor = options.backgroundColor;
-  localStorage.twentyFourHourFormat = options.twentyFourHourFormat;
+  localStorage.colorTheme = options.colorTheme;
+  localStorage.timeSize = options.timeSize;
+  localStorage.dateSize = options.dateSize;
+  localStorage.bluetoothAlarm = options.bluetoothAlarm;
+  localStorage.batteryIcon = options.batteryIcon;
 
   console.log('Got options: ' + JSON.stringify(options));
   return options;
