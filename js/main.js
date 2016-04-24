@@ -15,8 +15,10 @@ function submitHandler() {
 }
 
 function loadOptions() {
-  var $backgroundColorPicker = $('#backgroundColorPicker');
-  var $timeFormatCheckbox = $('#timeFormatCheckbox');
+  var $colorTheme = $('#colorTheme');
+  var $timeSize = $('#timeSize');
+  var $timeSize = $('#timeSize');
+  var $timeSize = $('#timeSize');
 
   if (localStorage.backgroundColor) {
     $backgroundColorPicker[0].value = localStorage.backgroundColor;
