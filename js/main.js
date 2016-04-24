@@ -22,7 +22,7 @@ function loadOptions() {
   var $batteryIcon = $('#batteryIcon');
 
   if (localStorage.colorTheme) {
-    $colorTheme[0].value = localStorage.colorTheme;
+    $colorTheme[0].selected = localStorage.colorTheme;
     $timeSize[0].value = localStorage.timeSize;
     $dateSize[0].value = localStorage.dateSize;
     $bluetoothAlarm[0].value = localStorage.bluetoothAlarm;
