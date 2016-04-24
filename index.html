@@ -7,74 +7,41 @@
   <link rel='stylesheet' type='text/css' href='css/style.css'>
 </head>
 <body>
-  <div class='item-container'>
+   <div class='item-container'>
     <h1 class='title'>Watchface<br>Configuration Page</h1>
   </div>
 
-  <!-- div class='item-container'>
+  <div class='item-container'>
     <div class='item-container-content'>
       <div class='item'>
         Use this configuration page to choose the settings you would like
         applied to this app.
       </div>
     </div>
-  </div >
-  
-  <div class="item-container">
-  <div class="item-container-header">Appearance</div>
-  <div class="item-container-content">
-    <label class="item">
-      Color theme
-      <select name="select-1" dir='ColorTheme' class="item-select">
-        <option class="item-select-option" selected>White text on black</option>
-        <option class="item-select-option">Black text on white</option>
-        <option class="item-select-option">Background image</option>
-      </select>
-    </label>
-    <label class="item">
-      Time size
-      <select name="select-1" dir='TimeSize' class="item-select">
-        <option class="item-select-option">Small</option>
-        <option class="item-select-option">Medium</option>
-        <option class="item-select-option" selected>Large</option>
-        <option class="item-select-option">Huge</option>
-      </select>
-    </label>
-    <label class="item">
-      Date size
-      <select name="select-1" dir='DateSize' class="item-select">
-        <option class="item-select-option">No date</option>
-        <option class="item-select-option">Small</option>
-        <option class="item-select-option" selected>Medium</option>
-        <option class="item-select-option">Large</option>
-      </select>
-    </label>
   </div>
-</div>
 
-<div class="item-container">
-  <div class="item-container-header">Extra features</div>
-  <div class="item-container-content">
-    <label class="item">
-      Bluetooth notification
-      <select name="select-1" dir='BluetoothAlarm' class="item-select">
-        <option class="item-select-option">Off</option>
-        <option class="item-select-option">Icon only</option>
-        <option class="item-select-option" selected>Icon + vibration</option>
-      </select>
-    </label>
-    <label class="item">
-      Battery low icon
-      <input type="checkbox" class="item-toggle" name="BatteryIcon" checked>
-    </label>
+  <div class='item-container'>
+    <div class='item-container-header'>Customizability</div>
+    <div class='item-container-content'>
+      <label class='item'>
+        Background Color
+        <input id='backgroundColorPicker' type='text' class='item-color item-color-sunny' value='#000000'>
+      </label>
+      <label class='item'>
+        24-Hour Format
+        <input id='timeFormatCheckbox' type='checkbox' class='item-checkbox' checked>
+      </label>
+    </div>
+    <div class='item-container-footer'>
+      These settings only change on the watch after you click save.
+    </div>
   </div>
-</div>
--->
-<div class='item-container'>
-  <div class='button-container'>
-    <input id='submitButton' type='button' class='item-button' value='SUBMIT'>
+
+  <div class='item-container'>
+    <div class='button-container'>
+      <input id='submitButton' type='button' class='item-button' value='SUBMIT'>
+    </div>
   </div>
-</div>
 
   <script src='js/slate.min.js'></script>
   <script src='js/main.js'></script>
