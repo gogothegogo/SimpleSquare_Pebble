@@ -1,11 +1,17 @@
 {
-    "appKeys": {},
+    "appKeys": {
+        "BATTERY_ICON": 4,
+        "BLUETOOTH_ALARM": 3,
+        "COLOR_THEME": 0,
+        "DATE_SIZE": 2,
+        "TIME_SIZE": 1
+    },
     "capabilities": [
-        ""
+        "configurable"
     ],
     "companyName": "gogothegogo",
     "enableMultiJS": true,
-    "longName": "Roundish",
+    "longName": "Templatewatchface1",
     "projectType": "native",
     "resources": {
         "media": [
@@ -96,7 +102,7 @@
         ]
     },
     "sdkVersion": "3",
-    "shortName": "Roundish",
+    "shortName": "Templatewatchface1",
     "targetPlatforms": [
         "aplite",
         "basalt"

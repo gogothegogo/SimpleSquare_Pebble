@@ -3,7 +3,7 @@ Pebble.addEventListener('ready', function() {
 });
 
 Pebble.addEventListener('showConfiguration', function() {
-  var url = 'https://kirby.ngrok.io';
+  var url = 'http://gogothegogo.github.io/TemplateWatchface1/';
 
   console.log('Showing configuration page: ' + url);
 
@@ -15,10 +15,13 @@ Pebble.addEventListener('webviewclosed', function(e) {
 
   console.log('Configuration page returned: ' + JSON.stringify(configData));
 
-  if (configData.backgroundColor) {
+  if (configData.colorTheme) {
     Pebble.sendAppMessage({
-      backgroundColor: parseInt(configData.backgroundColor, 16),
-      twentyFourHourFormat: configData.twentyFourHourFormat
+      colorTheme: parseInt(configData.colorTheme),
+      timeSize: parseInt(configData.timeSize),
+      dateSize: parseInt(configData.dateSize),
+      bluetoothAlarm: parseInt(configData.bluetoothAlarm),
+      batteryIcon: parseInt(configData.batteryIcon)
     }, function() {
       console.log('Send successful!');
     }, function() {

@@ -1,10 +1,5 @@
 #include <pebble.h>
-
-#define COLOR_THEME 1 //0 debug mode text layer visible, 1 black with white text, 2 white with black text, 3 backgroung image
-#define TIME_SIZE 3 //1 small, 2 medium, 3 large, 4 huge
-#define DATE_SIZE 2 //0 no date, 1 small, 2 medium, 3 large
-#define BLUETOOTH_ALARM 2 //0 off, 1 icon, 2 icon+alarm
-#define BATTERY_ICON 1 //0 off, 1 on
+#include "settings.h"
 
 static Window *s_main_window;
 static TextLayer *s_time_layer, *s_date_layer;
@@ -59,15 +54,20 @@ static void bluetooth_callback(bool connected) {
 }
 #endif
 
-#if BATTERY_ICON == 1
+#if BATTERY_ICON > 0
 static void battery_callback(BatteryChargeState state) {
   if (state.is_charging) {
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_charging_bitmap);
-    } else if (state.charge_percent <= 10) {
+    }
+  else if (state.charge_percent <= 10) {
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);     
-    } else if (state.charge_percent <= 20) {
+    }
+#if BATTERY_ICON == 2
+  else if (state.charge_percent <= 20) {
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_halfempty_bitmap);            
-    } else {
+    }
+#endif
+  else {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
     return;
   }
@@ -75,14 +75,13 @@ static void battery_callback(BatteryChargeState state) {
 }
 #endif
 
-
-
 static void main_window_load(Window *window) {
   // Get information about the Window
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
 #if COLOR_THEME == 3
+  if ()
   // Create GBitmap
   s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND_CIRCLE);
   //create bitmap layer
@@ -146,7 +145,7 @@ static void main_window_load(Window *window) {
   layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connection_service_peek_pebble_app_connection() ? true : false);
 #endif
   
-#if BATTERY_ICON == 1
+#if BATTERY_ICON > 0
   // Create the Battery icon GBitmap
   s_battery_charging_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_CHARGING);
   s_battery_empty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_EMPTY);
@@ -181,7 +180,7 @@ static void main_window_unload(Window *window) {
   bitmap_layer_destroy(s_bt_icon_layer);
 #endif
   
-#if BATTERY_ICON == 1
+#if BATTERY_ICON > 0
   gbitmap_destroy(s_battery_halfempty_bitmap);
   gbitmap_destroy(s_battery_empty_bitmap);
   bitmap_layer_destroy(s_battery_layer);
@@ -254,7 +253,7 @@ static void init() {
   //connection_service_subscribe( (ConnectionHandlers) {.pebble_app_connection_handler = bluetooth_callback} );
 #endif
   
-#if BATTERY_ICON == 1
+#if BATTERY_ICON > 0
   // Register for battery level updates
   battery_state_service_subscribe(battery_callback);
 #endif
