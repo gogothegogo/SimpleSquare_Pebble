@@ -26,7 +26,7 @@ function loadOptions() {
     $timeSize[0].value = localStorage.timeSize;
     $dateSize[0].value = localStorage.dateSize;
     $bluetoothAlarm[0].value = localStorage.bluetoothAlarm;
-    $batteryIcon[0].checked = localStorage.batteryIcon === 'true';
+    $batteryIcon[0].value = localStorage.batteryIcon;
   }
 }
 
@@ -42,7 +42,7 @@ function getAndStoreConfigData() {
     timeSize: $timeSize.val(),
     dateSize: $dateSize.val(),
     bluetoothAlarm: $bluetoothAlarm.val(),
-    batteryIcon: $batteryIcon[0].checked
+    batteryIcon: $batteryIcon.val()
   };
 
   localStorage.colorTheme = options.colorTheme;
