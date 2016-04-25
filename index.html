@@ -68,7 +68,11 @@
     </label>
     <label class="item">
       Battery low
-      <input id="batteryIcon" type="checkbox" class="item-toggle" name="batteryIcon" checked>
+      <select id="batteryIcon" dir='batteryIcon' class="item-select">
+        <option class="item-select-option" value=0>Off</option>
+        <option class="item-select-option" value=1>on 10%</option>
+        <option class="item-select-option" value=2 selected>on 20% and 10%</option>
+      </select>
     </label>
   </div>
   <div class="item-container-footer">
