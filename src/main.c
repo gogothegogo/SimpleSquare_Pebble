@@ -14,6 +14,35 @@ static GBitmap *s_background_bitmap, *s_bt_icon_bitmap, *s_battery_empty_bitmap,
 static int time_position_offset_withdate = 0;
 static GAlign background_bitmap_alignment;
 
+static void init();
+static void deinit();
+
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+  Tuple *colorTheme = dict_find(iter, AppKeyColorTheme);
+  Tuple *timeSize = dict_find(iter, AppKeyTimeSize);
+  Tuple *dateSize = dict_find(iter, AppKeyDateSize);
+  Tuple *bluetoothAlarm = dict_find(iter, AppKeyBluetoothAlarm);
+  Tuple *batteryIcon = dict_find(iter, AppKeyBatteryIcon);
+
+  if (colorTheme) {
+    persist_write_int(AppKeyColorTheme, colorTheme->value->int32);
+  }
+  if (timeSize) {
+    persist_write_int(AppKeyTimeSize, timeSize->value->int32);
+  }
+  if (dateSize) {
+    persist_write_int(AppKeyDateSize, dateSize->value->int32);
+  }
+  if (bluetoothAlarm) {
+    persist_write_int(AppKeyBluetoothAlarm, bluetoothAlarm->value->int32);
+  }
+  if (batteryIcon) {
+    persist_write_int(AppKeyBatteryIcon, batteryIcon->value->int32);
+  }
+  deinit();
+  init();
+}
+
 static void update_time() {
   // Get a tm structure
   time_t temp = time(NULL); 
@@ -38,75 +67,69 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
 }
 
-#if BLUETOOTH_ALARM > 0
-static void bluetooth_callback(bool connected) {
-  // Show icon if disconnected
-  layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connected);
-#if BLUETOOTH_ALARM == 2
-  if(connected) {
-    // Issue a vibrating alert
-    vibes_double_pulse();
-  } else {
-    // Issue a vibrating alert
-    vibes_double_pulse();
+//  if (settings[AppKeyBluetoothAlarm]>0) {
+  static void bluetooth_callback(bool connected) {
+    // Show icon if disconnected
+    layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connected);
+    if (settings[AppKeyBluetoothAlarm]==2) {
+      if(connected) {
+        // Issue a vibrating alert
+        vibes_double_pulse();
+      } else {
+        // Issue a vibrating alert
+        vibes_double_pulse();
+      }
+    }
   }
-#endif
-}
-#endif
+//}
 
-#if BATTERY_ICON > 0
 static void battery_callback(BatteryChargeState state) {
   if (state.is_charging) {
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_charging_bitmap);
     }
-  else if (state.charge_percent <= 10) {
+  else if (state.charge_percent <= 10 && settings[AppKeyBatteryIcon] == 1) {
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);     
     }
-#if BATTERY_ICON == 2
-  else if (state.charge_percent <= 20) {
+  else if (state.charge_percent <= 20 && settings[AppKeyBatteryIcon] == 2) {
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_halfempty_bitmap);            
     }
-#endif
   else {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
     return;
   }
   layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), false);
 }
-#endif
 
 static void main_window_load(Window *window) {
   // Get information about the Window
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-#if COLOR_THEME == 3
-  if ()
-  // Create GBitmap
-  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND_CIRCLE);
-  //create bitmap layer
-  s_background_layer = bitmap_layer_create(bounds);
-  // Set the bitmap onto the layer and add to the window
-  bitmap_layer_set_alignment(s_background_layer, background_bitmap_alignment);
-  bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
-  layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
-#endif
-
+  if (settings[AppKeyColorTheme]==3) {
+    // Create GBitmap
+    s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND_CIRCLE);
+    //create bitmap layer
+    s_background_layer = bitmap_layer_create(bounds);
+    // Set the bitmap onto the layer and add to the window
+    bitmap_layer_set_alignment(s_background_layer, background_bitmap_alignment);
+    bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
+    layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
+  }
   
   // Create time TextLayer with specific bounds
-#if TIME_SIZE == 1
-  s_time_layer = text_layer_create(GRect(0, 52-time_position_offset_withdate, bounds.size.w, 50));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_48));
-#elif TIME_SIZE == 2
-  s_time_layer = text_layer_create(GRect(0, 42-time_position_offset_withdate, bounds.size.w, 66));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_64));
-#elif TIME_SIZE == 3
-  s_time_layer = text_layer_create(GRect(0, 36-time_position_offset_withdate, bounds.size.w, 76));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_74));
-#elif TIME_SIZE == 4
-  s_time_layer = text_layer_create(GRect(0, 28-time_position_offset_withdate, bounds.size.w, 92));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_90));
-#endif
+  if (settings[AppKeyTimeSize]==1) {
+    s_time_layer = text_layer_create(GRect(0, 52-time_position_offset_withdate, bounds.size.w, 50));
+    s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_48));
+  } else if (settings[AppKeyTimeSize]==2) {
+    s_time_layer = text_layer_create(GRect(0, 42-time_position_offset_withdate, bounds.size.w, 66));
+    s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_64));
+  } else if (settings[AppKeyTimeSize]==3) {
+    s_time_layer = text_layer_create(GRect(0, 36-time_position_offset_withdate, bounds.size.w, 76));
+    s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_74));
+  } else { //timesize == 4
+    s_time_layer = text_layer_create(GRect(0, 28-time_position_offset_withdate, bounds.size.w, 92));
+    s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_90));
+  }
   
   text_layer_set_font(s_time_layer, s_time_font);
   text_layer_set_background_color(s_time_layer, color_time_textlayer);
@@ -115,118 +138,122 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
   
-#if DATE_SIZE > 0
+  if (settings[AppKeyDateSize]>0) {
   // Create date TextLayer
-#if DATE_SIZE == 1
-  s_date_layer = text_layer_create(GRect(0, bounds.size.h-24+2, 144, 16));
-  text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
-#elif DATE_SIZE == 2
-  s_date_layer = text_layer_create(GRect(0, bounds.size.h-24, 144, 20));
-  text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
-#elif DATE_SIZE == 3
-  s_date_layer = text_layer_create(GRect(0, bounds.size.h-24-6, 144, 26));
-  text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
-#endif
-  text_layer_set_text_color(s_date_layer, color_date_text);
-  text_layer_set_background_color(s_date_layer, color_date_textlayer);
-  text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
-#endif
+    if (settings[AppKeyDateSize]==1) {
+      s_date_layer = text_layer_create(GRect(0, bounds.size.h-24+2, 144, 16));
+      text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+    } else if (settings[AppKeyDateSize]==2) {
+      s_date_layer = text_layer_create(GRect(0, bounds.size.h-24, 144, 20));
+      text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+    } else { //datesize==3
+      s_date_layer = text_layer_create(GRect(0, bounds.size.h-24-6, 144, 26));
+      text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+    }
+      text_layer_set_text_color(s_date_layer, color_date_text);
+      text_layer_set_background_color(s_date_layer, color_date_textlayer);
+      text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
+      layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
+  }
   
-#if BLUETOOTH_ALARM > 0
-  // Create the Bluetooth icon GBitmap
-  s_bt_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BLUETOOTH);
-  // Create the BitmapLayer to display the GBitmap
-  s_bt_icon_layer = bitmap_layer_create(GRect(3, 3, 8, 13));
-   //bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpAssignInverted);
-  bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
-  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bt_icon_layer));
-  // Show the correct state of the BT connection from the start
-  layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connection_service_peek_pebble_app_connection() ? true : false);
-#endif
+  if (settings[AppKeyBluetoothAlarm]>0) {
+    // Create the Bluetooth icon GBitmap
+    s_bt_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BLUETOOTH);
+    // Create the BitmapLayer to display the GBitmap
+    s_bt_icon_layer = bitmap_layer_create(GRect(3, 3, 8, 13));
+     //bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpAssignInverted);
+    bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
+    layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bt_icon_layer));
+    // Show the correct state of the BT connection from the start
+    layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connection_service_peek_pebble_app_connection() ? true : false);
+  }
   
-#if BATTERY_ICON > 0
-  // Create the Battery icon GBitmap
-  s_battery_charging_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_CHARGING);
-  s_battery_empty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_EMPTY);
-  s_battery_halfempty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HALFEMPTY);
-  // Create the BitmapLayer to display the GBitmap
-  s_battery_layer = bitmap_layer_create(GRect(144-3-15, 6, 15, 8));
-  //bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);
-  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
-  layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
-#endif
+  if (settings[AppKeyBatteryIcon] > 0) {
+    // Create the Battery icon GBitmap
+    s_battery_charging_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_CHARGING);
+    s_battery_empty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_EMPTY);
+    s_battery_halfempty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HALFEMPTY);
+    // Create the BitmapLayer to display the GBitmap
+    s_battery_layer = bitmap_layer_create(GRect(144-3-15, 6, 15, 8));
+    //bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);
+    layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
+    layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
+  }
 }
 
 static void main_window_unload(Window *window) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "entered main_window_unload");
   // Destroy TextLayers
   text_layer_destroy(s_time_layer);
   
-#if DATE_SIZE > 0
-  text_layer_destroy(s_date_layer);
-#endif
+  if (settings[AppKeyDateSize]>0) {
+    text_layer_destroy(s_date_layer);
+  }
   
   // Unload GFont
   fonts_unload_custom_font(s_time_font);
-#if COLOR_THEME == 3
-  // Destroy GBitmap
-  gbitmap_destroy(s_background_bitmap);
-  //Destroy BitmapLayer
-  bitmap_layer_destroy(s_background_layer);
-#endif
+  if (settings[AppKeyColorTheme]==3) {
+    // Destroy GBitmap
+    gbitmap_destroy(s_background_bitmap);
+    //Destroy BitmapLayer
+    bitmap_layer_destroy(s_background_layer);
+  }
 
-#if BLUETOOTH_ALARM > 0
-  gbitmap_destroy(s_bt_icon_bitmap);
-  bitmap_layer_destroy(s_bt_icon_layer);
-#endif
+  if (settings[AppKeyBluetoothAlarm]>0) {
+    gbitmap_destroy(s_bt_icon_bitmap);
+    bitmap_layer_destroy(s_bt_icon_layer);
+  }
   
-#if BATTERY_ICON > 0
-  gbitmap_destroy(s_battery_halfempty_bitmap);
-  gbitmap_destroy(s_battery_empty_bitmap);
-  bitmap_layer_destroy(s_battery_layer);
-#endif
+  if (settings[AppKeyBatteryIcon] > 0) {
+    gbitmap_destroy(s_battery_halfempty_bitmap);
+    gbitmap_destroy(s_battery_empty_bitmap);
+    bitmap_layer_destroy(s_battery_layer);
+  }
 
 }
 
 //---------------INIT-----------------------------
 static void init() {
+  
+  APP_LOG(APP_LOG_LEVEL_INFO, "entered init");
+  settings_read();
   // Create main Window element and assign to pointer
   s_main_window = window_create();
 
 //0 debug mode text layer visible, 1 black with white text, 2 white with black text, 3 backgroung image
-#if COLOR_THEME == 1
-  color_background=GColorBlack;
-  color_time_text=GColorWhite;
-  color_time_textlayer=GColorClear;
-  color_date_text=GColorWhite;
-  color_date_textlayer=GColorClear;
-#elif COLOR_THEME == 2
-  color_background=GColorWhite;
-  color_time_text=GColorBlack;
-  color_time_textlayer=GColorClear;
-  color_date_text=GColorBlack;
-  color_date_textlayer=GColorClear;
-#elif COLOR_THEME == 3
-  color_background=GColorBlack;
-  color_time_text=GColorBlack;
-  color_time_textlayer=GColorClear;
-  color_date_text=GColorWhite;
-  color_date_textlayer=GColorClear;
-#elif COLOR_THEME == 0
+  if (settings[AppKeyColorTheme]==1) {
+    color_background=GColorBlack;
+    color_time_text=GColorWhite;
+    color_time_textlayer=GColorClear;
+    color_date_text=GColorWhite;
+    color_date_textlayer=GColorClear;
+  } else if (settings[AppKeyColorTheme]==2) {
+    color_background=GColorWhite;
+    color_time_text=GColorBlack;
+    color_time_textlayer=GColorClear;
+    color_date_text=GColorBlack;
+    color_date_textlayer=GColorClear;
+  } else if (settings[AppKeyColorTheme]==3) {
+    color_background=GColorBlack;
+    color_time_text=GColorBlack;
+    color_time_textlayer=GColorClear;
+    color_date_text=GColorWhite;
+    color_date_textlayer=GColorClear;
+  } else { //colortheme==0
   color_background=GColorBlack;
   color_time_text=GColorBlack;
   color_time_textlayer=GColorWhite;
   color_date_text=GColorBlack;
   color_date_textlayer=GColorWhite;
-#endif
+  }
   
-#if DATE_SIZE > 0
-  time_position_offset_withdate=9;
-  background_bitmap_alignment=GAlignTop;
-#else
-  time_position_offset_withdate=0;
-  background_bitmap_alignment=GAlignCenter;
-#endif
+  if (settings[AppKeyDateSize]>0) {
+    time_position_offset_withdate=9;
+    background_bitmap_alignment=GAlignTop;
+  } else {
+    time_position_offset_withdate=0;
+    background_bitmap_alignment=GAlignCenter;
+  }
   
   // Set window background color
   window_set_background_color(s_main_window, color_background);
@@ -247,19 +274,24 @@ static void init() {
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
   
-#if BLUETOOTH_ALARM > 0
-  // Register for Bluetooth connection updates
-  bluetooth_connection_service_subscribe(bluetooth_callback);
-  //connection_service_subscribe( (ConnectionHandlers) {.pebble_app_connection_handler = bluetooth_callback} );
-#endif
+  if (settings[AppKeyBluetoothAlarm]>0) {
+    // Register for Bluetooth connection updates
+    bluetooth_connection_service_subscribe(bluetooth_callback);
+    //connection_service_subscribe( (ConnectionHandlers) {.pebble_app_connection_handler = bluetooth_callback} );
+  }
   
-#if BATTERY_ICON > 0
-  // Register for battery level updates
-  battery_state_service_subscribe(battery_callback);
-#endif
+  if (settings[AppKeyBatteryIcon] > 0) {
+    // Register for battery level updates
+    battery_state_service_subscribe(battery_callback);
+  }
+  
+  app_message_register_inbox_received(inbox_received_handler);
+  //app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+  app_message_open(256, 256);
 }
 
 static void deinit() {
+  APP_LOG(APP_LOG_LEVEL_INFO, "entered deinit");
   // Destroy Window
   window_destroy(s_main_window);
 }

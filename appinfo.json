@@ -1,10 +1,10 @@
 {
     "appKeys": {
-        "BATTERY_ICON": 4,
-        "BLUETOOTH_ALARM": 3,
-        "COLOR_THEME": 0,
-        "DATE_SIZE": 2,
-        "TIME_SIZE": 1
+        "batteryIcon": 4,
+        "bluetoothAlarm": 3,
+        "colorTheme": 0,
+        "dateSize": 2,
+        "timeSize": 1
     },
     "capabilities": [
         "configurable"

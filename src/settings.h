@@ -16,32 +16,21 @@ typedef enum {
 } AppKey;
 
 static int settings[5]={COLOR_THEME, TIME_SIZE, DATE_SIZE, BLUETOOTH_ALARM, BATTERY_ICON};
-/*
-static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-  Tuple *colorTheme = dict_find(iter, AppKeyColorTheme);
-  if(colorTheme) {
-    int *colorTheme = colorTheme->value->int8;
-    COLOR_THEME=colorTheme;
+
+static void settings_read () {
+  if (persist_read_int(AppKeyColorTheme)) {
+    settings[AppKeyColorTheme] = persist_read_int(AppKeyColorTheme);
   }
-}*/
-
-static int settings_get_default(AppKey key) {
-    switch (key) {
-    case AppKeyColorTheme:
-        return 1;
-    case AppKeyTimeSize:
-        return 3;
-    case AppKeyDateSize:
-        return 2;
-    case AppKeyBluetoothAlarm:
-        return 2;
-    case AppKeyBatteryIcon:
-        return 2;
-    default:
-        return 0;
-    }
-}
-
-static int settings_get(AppKey key) {
-        return settings_get_default(key);
+  if (persist_read_int(AppKeyTimeSize)) {
+    settings[AppKeyTimeSize] = persist_read_int(AppKeyTimeSize);
+  }
+  if (persist_read_int(AppKeyDateSize)) {
+    settings[AppKeyDateSize] = persist_read_int(AppKeyDateSize);
+  }
+  if (persist_read_int(AppKeyBluetoothAlarm)) {
+    settings[AppKeyBluetoothAlarm] = persist_read_int(AppKeyBluetoothAlarm);
+  }
+  if (persist_read_int(AppKeyBatteryIcon)) {
+    settings[AppKeyBatteryIcon] = persist_read_int(AppKeyBatteryIcon);
+  }
 }
