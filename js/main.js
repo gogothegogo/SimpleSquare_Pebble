@@ -18,8 +18,8 @@ function loadOptions() {
   var $colorTheme = $('#colorTheme');
   var $timeSize = $('#timeSize');
   var $dateSize = $('#dateSize');
-  var $monthString = $('#$monthString');
-  var $dayString = $('#$dayString');
+  var $monthString = $('#monthString');
+  var $dayString = $('#dayString');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
 
@@ -38,8 +38,8 @@ function getAndStoreConfigData() {
   var $colorTheme = $('#colorTheme');
   var $timeSize = $('#timeSize');
   var $dateSize = $('#dateSize');
-  var $monthString = $('#$monthString');
-  var $dayString = $('#$dayString');
+  var $monthString = $('#monthString');
+  var $dayString = $('#dayString');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
 
