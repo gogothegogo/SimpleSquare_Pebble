@@ -50,7 +50,7 @@ function getAndStoreConfigData() {
     bluetoothAlarm: $bluetoothAlarm.val(),
     batteryIcon: $batteryIcon.val(),
     dateFormat: $dateFormat.val(),
-    croatianDate: $croatianDate.val()
+    croatianDate: $croatianDate[0].checked
   };
 
   localStorage.colorTheme = options.colorTheme;
