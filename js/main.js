@@ -20,6 +20,8 @@ function loadOptions() {
   var $dateSize = $('#dateSize');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
+  var $dateFormat = $('#dateFormat');
+  var $croatianDate = $('#croatianDate');
 
   if (localStorage.colorTheme) {
     $colorTheme[0].value = localStorage.colorTheme;
@@ -27,6 +29,8 @@ function loadOptions() {
     $dateSize[0].value = localStorage.dateSize;
     $bluetoothAlarm[0].value = localStorage.bluetoothAlarm;
     $batteryIcon[0].value = localStorage.batteryIcon;
+    $dateFormat[0].value = localStorage.dateFormat;
+    $croatianDate[0].value = localStorage.croatianDate;
   }
 }
 
@@ -36,13 +40,17 @@ function getAndStoreConfigData() {
   var $dateSize = $('#dateSize');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
-
+  var $dateFormat = $('#dateFormat');
+  var $croatianDate = $('#croatianDate');
+  
   var options = {
     colorTheme: $colorTheme.val(),
     timeSize: $timeSize.val(),
     dateSize: $dateSize.val(),
     bluetoothAlarm: $bluetoothAlarm.val(),
     batteryIcon: $batteryIcon.val()
+    dateFormat: $dateFormat.val()
+    croatianDate: $croatianDate.val()
   };
 
   localStorage.colorTheme = options.colorTheme;
@@ -50,6 +58,8 @@ function getAndStoreConfigData() {
   localStorage.dateSize = options.dateSize;
   localStorage.bluetoothAlarm = options.bluetoothAlarm;
   localStorage.batteryIcon = options.batteryIcon;
+  localStorage.dateFormat = options.dateFormat;
+  localStorage.croatianDate = options.croatianDate;
 
   console.log('Got options: ' + JSON.stringify(options));
   return options;
