@@ -48,8 +48,8 @@ function getAndStoreConfigData() {
     timeSize: $timeSize.val(),
     dateSize: $dateSize.val(),
     bluetoothAlarm: $bluetoothAlarm.val(),
-    batteryIcon: $batteryIcon.val()
-    dateFormat: $dateFormat.val()
+    batteryIcon: $batteryIcon.val(),
+    dateFormat: $dateFormat.val(),
     croatianDate: $croatianDate.val()
   };
 
