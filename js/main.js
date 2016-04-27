@@ -18,8 +18,6 @@ function loadOptions() {
   var $colorTheme = $('#colorTheme');
   var $timeSize = $('#timeSize');
   var $dateSize = $('#dateSize');
-  var $monthString = $('#monthString');
-  var $dayString = $('#dayString');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
 
@@ -27,8 +25,6 @@ function loadOptions() {
     $colorTheme[0].value = localStorage.colorTheme;
     $timeSize[0].value = localStorage.timeSize;
     $dateSize[0].value = localStorage.dateSize;
-    $monthString[0].value = localStorage.monthString;
-    $dayString[0].value = localStorage.dayString;
     $bluetoothAlarm[0].value = localStorage.bluetoothAlarm;
     $batteryIcon[0].value = localStorage.batteryIcon;
   }
@@ -38,8 +34,6 @@ function getAndStoreConfigData() {
   var $colorTheme = $('#colorTheme');
   var $timeSize = $('#timeSize');
   var $dateSize = $('#dateSize');
-  var $monthString = $('#monthString');
-  var $dayString = $('#dayString');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
 
@@ -47,8 +41,6 @@ function getAndStoreConfigData() {
     colorTheme: $colorTheme.val(),
     timeSize: $timeSize.val(),
     dateSize: $dateSize.val(),
-    monthString: $monthString.val(),
-    dayString: $dayString.val(),
     bluetoothAlarm: $bluetoothAlarm.val(),
     batteryIcon: $batteryIcon.val()
   };
@@ -56,8 +48,6 @@ function getAndStoreConfigData() {
   localStorage.colorTheme = options.colorTheme;
   localStorage.timeSize = options.timeSize;
   localStorage.dateSize = options.dateSize;
-  localStorage.monthString = options.monthString;
-  localStorage.dayString = options.dayString;
   localStorage.bluetoothAlarm = options.bluetoothAlarm;
   localStorage.batteryIcon = options.batteryIcon;
 
