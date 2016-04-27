@@ -13,6 +13,8 @@ static BitmapLayer *s_background_layer, *s_bt_icon_layer, *s_battery_layer;
 static GBitmap *s_background_bitmap, *s_bt_icon_bitmap, *s_battery_empty_bitmap, *s_battery_halfempty_bitmap, *s_battery_charging_bitmap;
 static int time_position_offset_withdate = 0;
 static GAlign background_bitmap_alignment;
+static char *croMonths[12];
+static char *croDays[7];
 
 static void init();
 //static void deinit();
@@ -73,11 +75,6 @@ static void update_time() {
       default : strftime(date_buffer, sizeof(date_buffer), "%d %b, %a", tick_time);
     }
   } else {
-    static char *croMonths[12];
-    croMonths[0] = "Sij"; croMonths[1] = "Vlj"; croMonths[2] = "Ozu"; croMonths[3] = "Tra"; croMonths[4] = "Svi"; croMonths[5] = "Lip";
-    croMonths[6] = "Srp"; croMonths[7] = "Kol"; croMonths[8] = "Ruj"; croMonths[9] = "Lis"; croMonths[10] = "Stu"; croMonths[11] = "Pro";
-    static char *croDays[7];
-    croDays[1] = "Pon"; croDays[2] = "Uto"; croDays[3] = "Sri"; croDays[4] = "Cet"; croDays[5] = "Pet"; croDays[6] = "Sub"; croDays[0] = "Ned";
     
     switch (settings[AppKeyDateFormat]) { //1 - 27 Apr, Wed, 2 - Apr 27, Wed, 3 - Wed, 27 Apr, 4 - Wed, Apr 27
       case 2 : snprintf(date_buffer, sizeof(date_buffer), "%s %d, %s", croMonths[tick_time->tm_mon], tick_time->tm_mday, croDays[tick_time->tm_wday]);break;
@@ -213,6 +210,16 @@ static void main_window_load(Window *window) {
     layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
   }
+  
+  if (settings[AppKeyCroatianDate] == 0) {
+    //static char *croMonths[12];
+    croMonths[0] = "Sij"; croMonths[1] = "Vlj"; croMonths[2] = "Ozu"; croMonths[3] = "Tra"; croMonths[4] = "Svi"; croMonths[5] = "Lip";
+    croMonths[6] = "Srp"; croMonths[7] = "Kol"; croMonths[8] = "Ruj"; croMonths[9] = "Lis"; croMonths[10] = "Stu"; croMonths[11] = "Pro";
+    //static char *croDays[7];
+    croDays[1] = "Pon"; croDays[2] = "Uto"; croDays[3] = "Sri"; croDays[4] = "Cet"; croDays[5] = "Pet"; croDays[6] = "Sub"; croDays[0] = "Ned";
+  
+  }
+   
 }
 
 static void main_window_unload(Window *window) {
