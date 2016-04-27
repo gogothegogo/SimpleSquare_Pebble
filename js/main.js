@@ -30,7 +30,7 @@ function loadOptions() {
     $bluetoothAlarm[0].value = localStorage.bluetoothAlarm;
     $batteryIcon[0].value = localStorage.batteryIcon;
     $dateFormat[0].value = localStorage.dateFormat;
-    $croatianDate[0].value = localStorage.croatianDate;
+    $croatianDate[0].checked = localStorage.croatianDate == 1;
   }
 }
 
