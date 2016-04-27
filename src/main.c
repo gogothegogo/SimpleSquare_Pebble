@@ -211,12 +211,12 @@ static void main_window_load(Window *window) {
     layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
   }
   
-  if (settings[AppKeyCroatianDate] == 0) {
+  if (settings[AppKeyCroatianDate] == 1) {
     //static char *croMonths[12];
-    croMonths[0] = "Sij"; croMonths[1] = "Vlj"; croMonths[2] = "Ozu"; croMonths[3] = "Tra"; croMonths[4] = "Svi"; croMonths[5] = "Lip";
+    croMonths[0] = "Sij"; croMonths[1] = "Vlj"; croMonths[2] = "Ožu"; croMonths[3] = "Tra"; croMonths[4] = "Svi"; croMonths[5] = "Lip";
     croMonths[6] = "Srp"; croMonths[7] = "Kol"; croMonths[8] = "Ruj"; croMonths[9] = "Lis"; croMonths[10] = "Stu"; croMonths[11] = "Pro";
     //static char *croDays[7];
-    croDays[1] = "Pon"; croDays[2] = "Uto"; croDays[3] = "Sri"; croDays[4] = "Cet"; croDays[5] = "Pet"; croDays[6] = "Sub"; croDays[0] = "Ned";
+    croDays[1] = "Pon"; croDays[2] = "Uto"; croDays[3] = "Sri"; croDays[4] = "Čet"; croDays[5] = "Pet"; croDays[6] = "Sub"; croDays[0] = "Ned";
   
   }
    
