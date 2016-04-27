@@ -21,7 +21,9 @@ Pebble.addEventListener('webviewclosed', function(e) {
       timeSize: parseInt(configData.timeSize),
       dateSize: parseInt(configData.dateSize),
       bluetoothAlarm: parseInt(configData.bluetoothAlarm),
-      batteryIcon: parseInt(configData.batteryIcon)
+      batteryIcon: parseInt(configData.batteryIcon),
+      dateFormat: parseInt(configData.dateFormat),
+      croatianDate: parseInt(configData.croatianDate)
     }, function() {
       console.log('Send successful!');
     }, function() {

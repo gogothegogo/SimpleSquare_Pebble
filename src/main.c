@@ -15,7 +15,7 @@ static int time_position_offset_withdate = 0;
 static GAlign background_bitmap_alignment;
 
 static void init();
-static void deinit();
+//static void deinit();
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *colorTheme = dict_find(iter, AppKeyColorTheme);
@@ -23,6 +23,8 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *dateSize = dict_find(iter, AppKeyDateSize);
   Tuple *bluetoothAlarm = dict_find(iter, AppKeyBluetoothAlarm);
   Tuple *batteryIcon = dict_find(iter, AppKeyBatteryIcon);
+  Tuple *dateFormat = dict_find(iter, AppKeyDateFormat);
+  Tuple *croatianDate = dict_find(iter, AppKeyCroatianDate);
 
   if (colorTheme) {
     persist_write_int(AppKeyColorTheme, colorTheme->value->int32);
@@ -39,7 +41,13 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   if (batteryIcon) {
     persist_write_int(AppKeyBatteryIcon, batteryIcon->value->int32);
   }
-  deinit();
+  if (dateFormat) {
+    persist_write_int(AppKeyDateFormat, dateFormat->value->int32);
+  }
+  if (croatianDate) {
+    persist_write_int(AppKeyCroatianDate, croatianDate->value->int32);
+  }
+  //deinit();
   init();
 }
 
@@ -54,13 +62,33 @@ static void update_time() {
   // Display this time on the TextLayer
   text_layer_set_text(s_time_layer, s_buffer+(('0' == s_buffer[0])?1:0));
   
-#if DATE_SIZE > 0
+ if (settings[AppKeyDateSize]>0) {
   // Copy date into buffer from tm structure
   static char date_buffer[16];
-  strftime(date_buffer, sizeof(date_buffer), "%d %b, %a", tick_time);
+  if (settings[AppKeyCroatianDate] == 0) {
+    switch (settings[AppKeyDateFormat]) { //1 - 27 Apr, Wed, 2 - Apr 27, Wed, 3 - Wed, 27 Apr, 4 - Wed, Apr 27
+      case 2 : strftime(date_buffer, sizeof(date_buffer), "%b %d, %a", tick_time);break;
+      case 3 : strftime(date_buffer, sizeof(date_buffer), "%a, %d %b", tick_time);break;
+      case 4 : strftime(date_buffer, sizeof(date_buffer), "%a, %b %d", tick_time);break;
+      default : strftime(date_buffer, sizeof(date_buffer), "%d %b, %a", tick_time);
+    }
+  } else {
+    static char *croMonths[12];
+    croMonths[0] = "Sij"; croMonths[1] = "Vlj"; croMonths[2] = "Ozu"; croMonths[3] = "Tra"; croMonths[4] = "Svi"; croMonths[5] = "Lip";
+    croMonths[6] = "Srp"; croMonths[7] = "Kol"; croMonths[8] = "Ruj"; croMonths[9] = "Lis"; croMonths[10] = "Stu"; croMonths[11] = "Pro";
+    static char *croDays[7];
+    croDays[1] = "Pon"; croDays[2] = "Uto"; croDays[3] = "Sri"; croDays[4] = "Cet"; croDays[5] = "Pet"; croDays[6] = "Sub"; croDays[0] = "Ned";
+    
+    switch (settings[AppKeyDateFormat]) { //1 - 27 Apr, Wed, 2 - Apr 27, Wed, 3 - Wed, 27 Apr, 4 - Wed, Apr 27
+      case 2 : snprintf(date_buffer, sizeof(date_buffer), "%s %d, %s", croMonths[tick_time->tm_mon], tick_time->tm_mday, croDays[tick_time->tm_wday]);break;
+      case 3 : snprintf(date_buffer, sizeof(date_buffer), "%s, %d %s", croDays[tick_time->tm_wday], tick_time->tm_mday, croMonths[tick_time->tm_mon]);break;
+      case 4 : snprintf(date_buffer, sizeof(date_buffer), "%s, %s %d", croDays[tick_time->tm_wday], croMonths[tick_time->tm_mon], tick_time->tm_mday);break;
+      default : snprintf(date_buffer, sizeof(date_buffer), "%d %s, %s", tick_time->tm_mday, croMonths[tick_time->tm_mon], croDays[tick_time->tm_wday]);
+    }
+  }
   // Show the date
   text_layer_set_text(s_date_layer, date_buffer);
-#endif
+ }
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -86,11 +114,14 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 static void battery_callback(BatteryChargeState state) {
   if (state.is_charging) {
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_charging_bitmap);
+    APP_LOG(APP_LOG_LEVEL_INFO, "Battery charging");
     }
-  else if (state.charge_percent <= 10 && settings[AppKeyBatteryIcon] == 1) {
+  else if (state.charge_percent <= 10 && settings[AppKeyBatteryIcon] > 0) {
+    APP_LOG(APP_LOG_LEVEL_INFO, "Battery 10");
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);     
     }
   else if (state.charge_percent <= 20 && settings[AppKeyBatteryIcon] == 2) {
+    APP_LOG(APP_LOG_LEVEL_INFO, "Battery 20");
     bitmap_layer_set_bitmap(s_battery_layer, s_battery_halfempty_bitmap);            
     }
   else {
@@ -126,9 +157,12 @@ static void main_window_load(Window *window) {
   } else if (settings[AppKeyTimeSize]==3) {
     s_time_layer = text_layer_create(GRect(0, 36-time_position_offset_withdate, bounds.size.w, 76));
     s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_74));
-  } else { //timesize == 4
+  } else if (settings[AppKeyTimeSize]==4) {
     s_time_layer = text_layer_create(GRect(0, 28-time_position_offset_withdate, bounds.size.w, 92));
     s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_90));
+  } else { //timesize == 5
+    s_time_layer = text_layer_create(GRect(0, 10-time_position_offset_withdate, bounds.size.w, 118));
+    s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_116));
   }
   
   text_layer_set_font(s_time_layer, s_time_font);

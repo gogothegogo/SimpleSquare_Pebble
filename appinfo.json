@@ -3,6 +3,8 @@
         "batteryIcon": 4,
         "bluetoothAlarm": 3,
         "colorTheme": 0,
+        "croatianDate": 6,
+        "dateFormat": 5,
         "dateSize": 2,
         "timeSize": 1
     },
@@ -16,6 +18,13 @@
     "resources": {
         "media": [
             {
+                "characterRegex": "[0-9: ]",
+                "file": "fonts/Tallpix_tiny.ttf",
+                "name": "FONT_TALLPIX_48",
+                "targetPlatforms": null,
+                "type": "font"
+            },
+            {
                 "file": "images/battery_charging.png",
                 "name": "IMAGE_BATTERY_CHARGING",
                 "targetPlatforms": null,
@@ -24,21 +33,21 @@
             {
                 "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix_huge.ttf",
-                "name": "FONT_TALLPIX_90",
+                "name": "FONT_TALLPIX_116",
                 "targetPlatforms": null,
                 "type": "font"
             },
             {
                 "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix_large.ttf",
-                "name": "FONT_TALLPIX_74",
+                "name": "FONT_TALLPIX_90",
                 "targetPlatforms": null,
                 "type": "font"
             },
             {
                 "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix_small.ttf",
-                "name": "FONT_TALLPIX_48",
+                "name": "FONT_TALLPIX_64",
                 "targetPlatforms": null,
                 "type": "font"
             },
@@ -95,7 +104,7 @@
             {
                 "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix.ttf",
-                "name": "FONT_TALLPIX_64",
+                "name": "FONT_TALLPIX_74",
                 "targetPlatforms": null,
                 "type": "font"
             }
