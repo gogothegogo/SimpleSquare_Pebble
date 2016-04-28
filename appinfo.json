@@ -18,17 +18,18 @@
     "resources": {
         "media": [
             {
+                "characterRegex": "[ABCD]",
+                "file": "fonts/icons.ttf",
+                "name": "FONT_ICONS_16",
+                "targetPlatforms": null,
+                "type": "font"
+            },
+            {
                 "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix_tiny.ttf",
                 "name": "FONT_TALLPIX_48",
                 "targetPlatforms": null,
                 "type": "font"
-            },
-            {
-                "file": "images/battery_charging.png",
-                "name": "IMAGE_BATTERY_CHARGING",
-                "targetPlatforms": null,
-                "type": "bitmap"
             },
             {
                 "characterRegex": "[0-9: ]",
@@ -54,24 +55,6 @@
             {
                 "file": "images/pillow.png",
                 "name": "IMAGE_BACKGROUND_PILLOW",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/battery_halfempty.png",
-                "name": "IMAGE_BATTERY_HALFEMPTY",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/battery_empty.png",
-                "name": "IMAGE_BATTERY_EMPTY",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/bluetooth.png",
-                "name": "IMAGE_BLUETOOTH",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },

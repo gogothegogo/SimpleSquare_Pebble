@@ -2,15 +2,15 @@
 #include "settings.h"
 
 static Window *s_main_window;
-static TextLayer *s_time_layer, *s_date_layer;
-static GFont s_time_font;
+static TextLayer *s_time_layer, *s_date_layer, *s_battery_icon_layer, *s_bluetooth_icon_layer;
+static GFont s_time_font, s_icon_font;
 static GColor color_background;
 static GColor color_time_text;
 static GColor color_time_textlayer;
 static GColor color_date_text;
 static GColor color_date_textlayer;
-static BitmapLayer *s_background_layer, *s_bt_icon_layer, *s_battery_layer;
-static GBitmap *s_background_bitmap, *s_bt_icon_bitmap, *s_battery_empty_bitmap, *s_battery_halfempty_bitmap, *s_battery_charging_bitmap;
+static BitmapLayer *s_background_layer;
+static GBitmap *s_background_bitmap;
 static int time_position_offset_withdate = 0;
 static GAlign background_bitmap_alignment;
 static char *croMonths[12];
@@ -95,7 +95,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 //  if (settings[AppKeyBluetoothAlarm]>0) {
   static void bluetooth_callback(bool connected) {
     // Show icon if disconnected
-    layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connected);
+    layer_set_hidden(text_layer_get_layer(s_bluetooth_icon_layer), connected);
     if (settings[AppKeyBluetoothAlarm]==2) {
       if(connected) {
         // Issue a vibrating alert
@@ -110,28 +110,32 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void battery_callback(BatteryChargeState state) {
   if (state.is_charging) {
-    bitmap_layer_set_bitmap(s_battery_layer, s_battery_charging_bitmap);
+    text_layer_set_text(s_battery_icon_layer, "D");
     APP_LOG(APP_LOG_LEVEL_INFO, "Battery charging");
     }
   else if (state.charge_percent <= 10 && settings[AppKeyBatteryIcon] > 0) {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Battery 10");
-    bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);     
+    APP_LOG(APP_LOG_LEVEL_INFO, "Battery 10");  
+    text_layer_set_text(s_battery_icon_layer, "B");
     }
   else if (state.charge_percent <= 20 && settings[AppKeyBatteryIcon] == 2) {
     APP_LOG(APP_LOG_LEVEL_INFO, "Battery 20");
-    bitmap_layer_set_bitmap(s_battery_layer, s_battery_halfempty_bitmap);            
+    text_layer_set_text(s_battery_icon_layer, "C");
     }
   else {
-    layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
+    layer_set_hidden(text_layer_get_layer(s_battery_icon_layer), true);
     return;
   }
-  layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), false);
+  layer_set_hidden(text_layer_get_layer(s_battery_icon_layer), false);
 }
 
 static void main_window_load(Window *window) {
   // Get information about the Window
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
+  
+  if (settings[AppKeyBluetoothAlarm]>0 || settings[AppKeyBatteryIcon] > 0) {
+    s_icon_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ICONS_16));
+  }
 
   if (settings[AppKeyColorTheme]==3) {
     // Create GBitmap
@@ -188,27 +192,25 @@ static void main_window_load(Window *window) {
   }
   
   if (settings[AppKeyBluetoothAlarm]>0) {
-    // Create the Bluetooth icon GBitmap
-    s_bt_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BLUETOOTH);
-    // Create the BitmapLayer to display the GBitmap
-    s_bt_icon_layer = bitmap_layer_create(GRect(3, 3, 8, 13));
-     //bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpAssignInverted);
-    bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
-    layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bt_icon_layer));
-    // Show the correct state of the BT connection from the start
-    layer_set_hidden(bitmap_layer_get_layer(s_bt_icon_layer), connection_service_peek_pebble_app_connection() ? true : false);
+    s_bluetooth_icon_layer = text_layer_create(GRect(3, 0, 16, 16));
+    text_layer_set_font(s_bluetooth_icon_layer, s_icon_font);
+    text_layer_set_text_color(s_bluetooth_icon_layer, color_date_text);
+    text_layer_set_background_color(s_bluetooth_icon_layer, color_date_textlayer);
+    text_layer_set_text_alignment(s_bluetooth_icon_layer, GTextAlignmentCenter);
+    text_layer_set_text(s_bluetooth_icon_layer, "A");
+    layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_bluetooth_icon_layer));
+    layer_set_hidden(text_layer_get_layer(s_bluetooth_icon_layer), connection_service_peek_pebble_app_connection() ? true : false);
+    
   }
   
   if (settings[AppKeyBatteryIcon] > 0) {
-    // Create the Battery icon GBitmap
-    s_battery_charging_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_CHARGING);
-    s_battery_empty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_EMPTY);
-    s_battery_halfempty_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HALFEMPTY);
-    // Create the BitmapLayer to display the GBitmap
-    s_battery_layer = bitmap_layer_create(GRect(144-3-15, 6, 15, 8));
-    //bitmap_layer_set_bitmap(s_battery_layer, s_battery_empty_bitmap);
-    layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_battery_layer));
-    layer_set_hidden(bitmap_layer_get_layer(s_battery_layer), true);
+    s_battery_icon_layer = text_layer_create(GRect(144-16-3, 0, 16, 16));
+    text_layer_set_font(s_battery_icon_layer, s_icon_font);
+    text_layer_set_text_color(s_battery_icon_layer, color_date_text);
+    text_layer_set_background_color(s_battery_icon_layer, color_date_textlayer);
+    text_layer_set_text_alignment(s_battery_icon_layer, GTextAlignmentCenter);
+    layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_battery_icon_layer));
+    layer_set_hidden(text_layer_get_layer(s_battery_icon_layer), true);
   }
   
   if (settings[AppKeyCroatianDate] == 1) {
@@ -240,15 +242,16 @@ static void main_window_unload(Window *window) {
     bitmap_layer_destroy(s_background_layer);
   }
 
+  if (settings[AppKeyBluetoothAlarm]>0 || settings[AppKeyBatteryIcon] > 0) {
+    fonts_unload_custom_font(s_icon_font);
+  }
+  
   if (settings[AppKeyBluetoothAlarm]>0) {
-    gbitmap_destroy(s_bt_icon_bitmap);
-    bitmap_layer_destroy(s_bt_icon_layer);
+    text_layer_destroy(s_bluetooth_icon_layer);
   }
   
   if (settings[AppKeyBatteryIcon] > 0) {
-    gbitmap_destroy(s_battery_halfempty_bitmap);
-    gbitmap_destroy(s_battery_empty_bitmap);
-    bitmap_layer_destroy(s_battery_layer);
+    text_layer_destroy(s_battery_icon_layer);
   }
 
 }
