@@ -1,2 +1,2 @@
-# Roundish
+# Simple Square
 pebble watchface
