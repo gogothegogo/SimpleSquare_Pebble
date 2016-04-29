@@ -192,7 +192,7 @@ static void main_window_load(Window *window) {
   }
   
   if (settings[AppKeyBluetoothAlarm]>0) {
-    s_bluetooth_icon_layer = text_layer_create(GRect(3, 0, 16, 16));
+    s_bluetooth_icon_layer = text_layer_create(GRect(3, 168-22, 16, 16+1));
     text_layer_set_font(s_bluetooth_icon_layer, s_icon_font);
     text_layer_set_text_color(s_bluetooth_icon_layer, color_date_text);
     text_layer_set_background_color(s_bluetooth_icon_layer, color_date_textlayer);
@@ -204,13 +204,15 @@ static void main_window_load(Window *window) {
   }
   
   if (settings[AppKeyBatteryIcon] > 0) {
-    s_battery_icon_layer = text_layer_create(GRect(144-16-3, 0, 16, 16));
+    //s_battery_icon_layer = text_layer_create(GRect(144-16-3, 0, 16, 16));
+    s_battery_icon_layer = text_layer_create(GRect(144-16-3, 168-22, 16, 16+1));
     text_layer_set_font(s_battery_icon_layer, s_icon_font);
     text_layer_set_text_color(s_battery_icon_layer, color_date_text);
     text_layer_set_background_color(s_battery_icon_layer, color_date_textlayer);
     text_layer_set_text_alignment(s_battery_icon_layer, GTextAlignmentCenter);
     layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_battery_icon_layer));
     layer_set_hidden(text_layer_get_layer(s_battery_icon_layer), true);
+    battery_callback(battery_state_service_peek());
   }
   
   if (settings[AppKeyCroatianDate] == 1) {
