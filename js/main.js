@@ -15,51 +15,66 @@ function submitHandler() {
 }
 
 function loadOptions() {
-  var $colorTheme = $('#colorTheme');
   var $timeSize = $('#timeSize');
   var $dateSize = $('#dateSize');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
   var $dateFormat = $('#dateFormat');
   var $croatianDate = $('#croatianDate');
+  var $colorTimeBackground = $('#colorTimeBackground');
+  var $colorTimeText = $('#colorTimeText');
+  var $colorDateBackground = $('#colorDateBackground');
+  var $colorDateText = $('#colorDateText');
 
   if (localStorage.colorTheme) {
-    $colorTheme[0].value = localStorage.colorTheme;
     $timeSize[0].value = localStorage.timeSize;
     $dateSize[0].value = localStorage.dateSize;
     $bluetoothAlarm[0].value = localStorage.bluetoothAlarm;
     $batteryIcon[0].value = localStorage.batteryIcon;
     $dateFormat[0].value = localStorage.dateFormat;
     $croatianDate[0].checked = localStorage.croatianDate == 1;
+    $colorTimeBackground[0].value = localStorage.colorTimeBackground;
+    $colorTimeText[0].value = localStorage.colorTimeText;
+    $colorDateBackground[0].value = localStorage.colorDateBackground;
+    $colorDateText[0].value = localStorage.colorDateText;
   }
 }
 
 function getAndStoreConfigData() {
-  var $colorTheme = $('#colorTheme');
   var $timeSize = $('#timeSize');
   var $dateSize = $('#dateSize');
   var $bluetoothAlarm = $('#bluetoothAlarm');
   var $batteryIcon = $('#batteryIcon');
   var $dateFormat = $('#dateFormat');
   var $croatianDate = $('#croatianDate');
+  var $colorTimeBackground = $('#colorTimeBackground');
+  var $colorTimeText = $('#colorTimeText');
+  var $colorDateBackground = $('#colorDateBackground');
+  var $colorDateText = $('#colorDateText');
   
   var options = {
-    colorTheme: $colorTheme.val(),
     timeSize: $timeSize.val(),
     dateSize: $dateSize.val(),
     bluetoothAlarm: $bluetoothAlarm.val(),
     batteryIcon: $batteryIcon.val(),
     dateFormat: $dateFormat.val(),
-    croatianDate: $croatianDate[0].checked ? 1:0
+    croatianDate: $croatianDate[0].checked ? 1:0,
+    colorTimeBackground: $colorTimeBackground.val(),
+    colorTimeText: $colorTimeText.val(),
+    colorDateBackground: $colorDateBackground.val(),
+    colorDateText: $colorDateText.val()
   };
 
-  localStorage.colorTheme = options.colorTheme;
   localStorage.timeSize = options.timeSize;
   localStorage.dateSize = options.dateSize;
   localStorage.bluetoothAlarm = options.bluetoothAlarm;
   localStorage.batteryIcon = options.batteryIcon;
   localStorage.dateFormat = options.dateFormat;
   localStorage.croatianDate = options.croatianDate;
+  localStorage.colorTimeBackground = options.colorTimeBackground;
+  localStorage.colorTimeText = options.colorTimeText;
+  localStorage.colorDateBackground = options.colorDateBackground;
+  localStorage.colorDateText = options.colorDateText;
 
   console.log('Got options: ' + JSON.stringify(options));
   return options;
