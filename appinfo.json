@@ -2,7 +2,10 @@
     "appKeys": {
         "batteryIcon": 4,
         "bluetoothAlarm": 3,
-        "colorTheme": 0,
+        "colorDateBackground": 9,
+        "colorDateText": 10,
+        "colorTimeBackground": 7,
+        "colorTimeText": 8,
         "croatianDate": 6,
         "dateFormat": 5,
         "dateSize": 2,
@@ -13,10 +16,28 @@
     ],
     "companyName": "gogothegogo",
     "enableMultiJS": true,
-    "longName": "Templatewatchface1",
+    "longName": "Simple Square",
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/pillow.png",
+                "name": "IMAGE_BACKGROUND_PILLOW",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/background_pillow.png",
+                "name": "IMAGE_BACKGROUND_PILLOW1",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/background_circle.png",
+                "name": "IMAGE_BACKGROUND_CIRCLE",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
             {
                 "characterRegex": "[ABCD]",
                 "file": "fonts/icons.ttf",
@@ -33,8 +54,8 @@
             },
             {
                 "characterRegex": "[0-9: ]",
-                "file": "fonts/Tallpix_huge.ttf",
-                "name": "FONT_TALLPIX_116",
+                "file": "fonts/Tallpix_small.ttf",
+                "name": "FONT_TALLPIX_64",
                 "targetPlatforms": null,
                 "type": "font"
             },
@@ -47,27 +68,15 @@
             },
             {
                 "characterRegex": "[0-9: ]",
-                "file": "fonts/Tallpix_small.ttf",
-                "name": "FONT_TALLPIX_64",
+                "file": "fonts/Tallpix_huge.ttf",
+                "name": "FONT_TALLPIX_116",
                 "targetPlatforms": null,
                 "type": "font"
             },
             {
-                "file": "images/pillow.png",
-                "name": "IMAGE_BACKGROUND_PILLOW",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/background_pillow.png",
-                "name": "IMAGE_BACKGROUND_PILLOW1",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "characterRegex": "[0-9:.]",
-                "file": "fonts/NewsflashBB.ttf",
-                "name": "FONT_NEWSFLASH_56",
+                "characterRegex": "[0-9: ]",
+                "file": "fonts/Tallpix.ttf",
+                "name": "FONT_TALLPIX_74",
                 "targetPlatforms": null,
                 "type": "font"
             },
@@ -79,27 +88,21 @@
                 "type": "font"
             },
             {
-                "file": "images/background_circle.png",
-                "name": "IMAGE_BACKGROUND_CIRCLE",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "characterRegex": "[0-9: ]",
-                "file": "fonts/Tallpix.ttf",
-                "name": "FONT_TALLPIX_74",
+                "characterRegex": "[0-9:.]",
+                "file": "fonts/NewsflashBB.ttf",
+                "name": "FONT_NEWSFLASH_56",
                 "targetPlatforms": null,
                 "type": "font"
             }
         ]
     },
     "sdkVersion": "3",
-    "shortName": "Templatewatchface1",
+    "shortName": "Simple Square",
     "targetPlatforms": [
         "aplite",
         "basalt"
     ],
-    "uuid": "69eccc60-a99d-4b74-8bf7-da862d6f4b1d",
+    "uuid": "0ad28198-0ba1-45ba-87e0-03b13f25bf42",
     "versionLabel": "1.0",
     "watchapp": {
         "watchface": true

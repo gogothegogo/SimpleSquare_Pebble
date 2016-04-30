@@ -3,7 +3,7 @@ Pebble.addEventListener('ready', function() {
 });
 
 Pebble.addEventListener('showConfiguration', function() {
-  var url = 'http://gogothegogo.github.io/TemplateWatchface1/';
+  var url = 'http://gogothegogo.github.io/SimpleSquare_Pebble/';
 
   console.log('Showing configuration page: ' + url);
 
@@ -17,7 +17,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 
   if (configData.colorTheme) {
     Pebble.sendAppMessage({
-      colorTheme: parseInt(configData.colorTheme),
+      //colorTheme: parseInt(configData.colorTheme),
       timeSize: parseInt(configData.timeSize),
       dateSize: parseInt(configData.dateSize),
       bluetoothAlarm: parseInt(configData.bluetoothAlarm),
