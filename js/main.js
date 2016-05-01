@@ -92,11 +92,14 @@ function getQueryParam(variable, defaultValue) {
   return defaultValue || false;
 }
 
-     $('.preset').click(function(e) {
-             $currentId = $(this).attr('id');
-             var $prevId = $currentId;
-             $('.preset').removeClass('current');
-             $(this).addClass('current');
-             if($currentId== 1) {
-
-             } else if($currentId == 2) {}
+$('.preset').click(function(e) {
+  $currentId = $(this).attr('id');
+  var $prevId = $currentId;
+  $('.preset').removeClass('current');
+  $(this).addClass('current');
+  if($currentId== 1) {
+    
+    } else if($currentId == 2) {
+      
+    }
+}
