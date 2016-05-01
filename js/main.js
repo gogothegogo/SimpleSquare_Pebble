@@ -99,8 +99,12 @@ $('.preset').click(function(e) {
   $('.preset').removeClass('current');
   $(this).addClass('current');
   if($currentId== 1) {
+    var $timeSize = $('#timeSize');
+    $timeSize[0].value = 1;
     
     } else if($currentId == 2) {
+      var $timeSize = $('#timeSize');
+    $timeSize[0].value = 2;
       
     }
 });
