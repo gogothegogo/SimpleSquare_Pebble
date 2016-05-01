@@ -92,6 +92,7 @@ function getQueryParam(variable, defaultValue) {
   return defaultValue || false;
 }
 
+var $currentId;
 $('.preset').click(function(e) {
   $currentId = $(this).attr('id');
   var $prevId = $currentId;
@@ -102,4 +103,4 @@ $('.preset').click(function(e) {
     } else if($currentId == 2) {
       
     }
-}
+});
