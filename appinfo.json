@@ -21,24 +21,6 @@
     "resources": {
         "media": [
             {
-                "file": "images/pillow.png",
-                "name": "IMAGE_BACKGROUND_PILLOW",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/background_pillow.png",
-                "name": "IMAGE_BACKGROUND_PILLOW1",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/background_circle.png",
-                "name": "IMAGE_BACKGROUND_CIRCLE",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
                 "characterRegex": "[ABCD]",
                 "file": "fonts/icons.ttf",
                 "name": "FONT_ICONS_16",
@@ -77,20 +59,6 @@
                 "characterRegex": "[0-9: ]",
                 "file": "fonts/Tallpix.ttf",
                 "name": "FONT_TALLPIX_74",
-                "targetPlatforms": null,
-                "type": "font"
-            },
-            {
-                "characterRegex": "[0-9:.]",
-                "file": "fonts/SirClive.ttf",
-                "name": "FONT_SIRCLIVE_48",
-                "targetPlatforms": null,
-                "type": "font"
-            },
-            {
-                "characterRegex": "[0-9:.]",
-                "file": "fonts/NewsflashBB.ttf",
-                "name": "FONT_NEWSFLASH_56",
                 "targetPlatforms": null,
                 "type": "font"
             }
