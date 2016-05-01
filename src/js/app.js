@@ -15,15 +15,18 @@ Pebble.addEventListener('webviewclosed', function(e) {
 
   console.log('Configuration page returned: ' + JSON.stringify(configData));
 
-  if (configData.colorTheme) {
+  if (configData.timeSize) {
     Pebble.sendAppMessage({
-      //colorTheme: parseInt(configData.colorTheme),
       timeSize: parseInt(configData.timeSize),
       dateSize: parseInt(configData.dateSize),
       bluetoothAlarm: parseInt(configData.bluetoothAlarm),
       batteryIcon: parseInt(configData.batteryIcon),
       dateFormat: parseInt(configData.dateFormat),
-      croatianDate: parseInt(configData.croatianDate)
+      croatianDate: parseInt(configData.croatianDate),
+      colorTimeBackground: parseInt(configData.colorTimeBackground, 16),
+      colorTimeText: parseInt(configData.colorTimeText, 16),
+      colorDateBackground: parseInt(configData.colorDateBackground, 16),
+      colorDateText: parseInt(configData.colorDateText, 16)
     }, function() {
       console.log('Send successful!');
     }, function() {

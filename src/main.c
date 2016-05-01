@@ -4,15 +4,11 @@
 static Window *s_main_window;
 static TextLayer *s_time_layer, *s_date_layer, *s_battery_icon_layer, *s_bluetooth_icon_layer;
 static GFont s_time_font, s_icon_font;
-static GColor color_background;
-static GColor color_time_text;
-static GColor color_time_textlayer;
-static GColor color_date_text;
-static GColor color_date_textlayer;
-static BitmapLayer *s_background_layer;
-static GBitmap *s_background_bitmap;
+static GColor color_background, color_time_text, color_time_textlayer, color_date_text, color_date_textlayer, color_date_background;
+static BitmapLayer *date_background_layer;
+//static GBitmap *s_background_bitmap;
 static int time_position_offset_withdate = 0;
-static GAlign background_bitmap_alignment;
+//static GAlign background_bitmap_alignment;
 static char *croMonths[12];
 static char *croDays[7];
 
@@ -20,17 +16,17 @@ static void init();
 //static void deinit();
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-  Tuple *colorTheme = dict_find(iter, AppKeyColorTheme);
   Tuple *timeSize = dict_find(iter, AppKeyTimeSize);
   Tuple *dateSize = dict_find(iter, AppKeyDateSize);
   Tuple *bluetoothAlarm = dict_find(iter, AppKeyBluetoothAlarm);
   Tuple *batteryIcon = dict_find(iter, AppKeyBatteryIcon);
   Tuple *dateFormat = dict_find(iter, AppKeyDateFormat);
   Tuple *croatianDate = dict_find(iter, AppKeyCroatianDate);
+  Tuple *colorTimeBackground = dict_find(iter, AppKeyColorTimeBackground);
+  Tuple *colorTimeText = dict_find(iter, AppKeyColorTimeText);
+  Tuple *colorDateBackground = dict_find(iter, AppKeyColorDateBackground);
+  Tuple *colorDateText = dict_find(iter, AppKeyColorDateText);
 
-  if (colorTheme) {
-    persist_write_int(AppKeyColorTheme, colorTheme->value->int32);
-  }
   if (timeSize) {
     persist_write_int(AppKeyTimeSize, timeSize->value->int32);
   }
@@ -48,6 +44,18 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   }
   if (croatianDate) {
     persist_write_int(AppKeyCroatianDate, croatianDate->value->int32);
+  }
+  if (colorTimeBackground) {
+    persist_write_int(AppKeyColorTimeBackground, colorTimeBackground->value->int32);
+  }
+  if (colorTimeText) {
+    persist_write_int(AppKeyColorTimeText, colorTimeText->value->int32);
+  }
+  if (colorDateBackground) {
+    persist_write_int(AppKeyColorDateBackground, colorDateBackground->value->int32);
+  }
+  if (colorDateText) {
+    persist_write_int(AppKeyColorDateText, colorDateText->value->int32);
   }
   //deinit();
   init();
@@ -137,16 +145,16 @@ static void main_window_load(Window *window) {
     s_icon_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ICONS_16));
   }
 
-  if (settings[AppKeyColorTheme]==3) {
+/* background image
     // Create GBitmap
-    s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND_CIRCLE);
+    s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND_PILLOW);
     //create bitmap layer
     s_background_layer = bitmap_layer_create(bounds);
     // Set the bitmap onto the layer and add to the window
     bitmap_layer_set_alignment(s_background_layer, background_bitmap_alignment);
     bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
     layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
-  }
+    */
   
   // Create time TextLayer with specific bounds
   if (settings[AppKeyTimeSize]==1) {
@@ -174,6 +182,9 @@ static void main_window_load(Window *window) {
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
   
   if (settings[AppKeyDateSize]>0) {
+    date_background_layer = bitmap_layer_create(GRect(0, 144, 144, 24));
+    bitmap_layer_set_background_color(date_background_layer, color_date_background);
+    layer_add_child(window_layer, bitmap_layer_get_layer(date_background_layer));
   // Create date TextLayer
     if (settings[AppKeyDateSize]==1) {
       s_date_layer = text_layer_create(GRect(0, bounds.size.h-24+2, 144, 16));
@@ -237,12 +248,12 @@ static void main_window_unload(Window *window) {
   
   // Unload GFont
   fonts_unload_custom_font(s_time_font);
-  if (settings[AppKeyColorTheme]==3) {
+/* destroy background image
     // Destroy GBitmap
     gbitmap_destroy(s_background_bitmap);
     //Destroy BitmapLayer
     bitmap_layer_destroy(s_background_layer);
-  }
+  */
 
   if (settings[AppKeyBluetoothAlarm]>0 || settings[AppKeyBatteryIcon] > 0) {
     fonts_unload_custom_font(s_icon_font);
@@ -263,44 +274,31 @@ static void init() {
   
   APP_LOG(APP_LOG_LEVEL_INFO, "entered init");
   settings_read();
-  // Create main Window element and assign to pointer
-  s_main_window = window_create();
 
-//0 debug mode text layer visible, 1 black with white text, 2 white with black text, 3 backgroung image
-  if (settings[AppKeyColorTheme]==1) {
-    color_background=GColorBlack;
-    color_time_text=GColorWhite;
+
+    //color_background=COLOR_FALLBACK(GColorFromHEX(settings[AppKeyColorTimeBackground]), GColorBlack);
+    //color_time_text=COLOR_FALLBACK(GColorFromHEX(settings[AppKeyColorTimeText]), GColorWhite);
+    //color_time_textlayer=GColorClear;
+    //color_date_text=COLOR_FALLBACK(GColorFromHEX(settings[AppKeyColorDateText]), GColorWhite);
+    //color_date_textlayer=COLOR_FALLBACK(GColorFromHEX(settings[AppKeyColorDateBackground]), GColorClear);
+  
+    color_background=GColorFromHEX(settings[AppKeyColorTimeBackground]);
+    color_time_text=GColorFromHEX(settings[AppKeyColorTimeText]);
     color_time_textlayer=GColorClear;
-    color_date_text=GColorWhite;
+    color_date_text=GColorFromHEX(settings[AppKeyColorDateText]);
     color_date_textlayer=GColorClear;
-  } else if (settings[AppKeyColorTheme]==2) {
-    color_background=GColorWhite;
-    color_time_text=GColorBlack;
-    color_time_textlayer=GColorClear;
-    color_date_text=GColorBlack;
-    color_date_textlayer=GColorClear;
-  } else if (settings[AppKeyColorTheme]==3) {
-    color_background=GColorBlack;
-    color_time_text=GColorBlack;
-    color_time_textlayer=GColorClear;
-    color_date_text=GColorWhite;
-    color_date_textlayer=GColorClear;
-  } else { //colortheme==0
-  color_background=GColorBlack;
-  color_time_text=GColorBlack;
-  color_time_textlayer=GColorWhite;
-  color_date_text=GColorBlack;
-  color_date_textlayer=GColorWhite;
-  }
+    color_date_background=GColorFromHEX(settings[AppKeyColorDateBackground]);
   
   if (settings[AppKeyDateSize]>0) {
     time_position_offset_withdate=9;
-    background_bitmap_alignment=GAlignTop;
+    //background_bitmap_alignment=GAlignTop;
   } else {
     time_position_offset_withdate=0;
-    background_bitmap_alignment=GAlignCenter;
+    //background_bitmap_alignment=GAlignCenter;
   }
   
+    // Create main Window element and assign to pointer
+  s_main_window = window_create();
   // Set window background color
   window_set_background_color(s_main_window, color_background);
 
