@@ -103,8 +103,7 @@ $('.preset').click(function(e) {
     $timeSize[0].value = 1;
     
     } else if($currentId == 2) {
-      var $timeSize = $('#timeSize');
-    $timeSize[0].value = 2;
+    $('#timeSize')[0].value = 2;
       
     }
 });
