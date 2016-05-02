@@ -112,5 +112,35 @@ $('.preset').click(function(e) {
       $('#colorTimeText')[0].value="0x000055";
       $('#colorDateBackground')[0].value="0x000055";
       $('#colorDateText')[0].value="0xFFFFFF";
+    } else if($currentId == 3) {
+      $('#timeSize')[0].value=5;
+      $('#dateSize')[0].value=0;
+      $('#colorTimeBackground')[0].value="0xFFFFFF";
+      $('#colorTimeText')[0].value="0x00AAAA";
+      $('#colorDateBackground')[0].value="0xFFFFFF";
+      $('#colorDateText')[0].value="0x00AAAA";
+    } else if($currentId == 4) {
+      $('#timeSize')[0].value=5;
+      $('#dateSize')[0].value=0;
+      $('#colorTimeBackground')[0].value="0x00AAAA";
+      $('#colorTimeText')[0].value="0xFFFFFF";
+      $('#colorDateBackground')[0].value="0x00AAAA";
+      $('#colorDateText')[0].value="0xFFFFFF";
+    } else if($currentId == 5) {
+      $('#timeSize')[0].value=1;
+      $('#dateSize')[0].value=0;
+      $('#colorTimeBackground')[0].value="0x000000";
+      $('#colorTimeText')[0].value="0xFF0000";
+      $('#colorDateBackground')[0].value="0x000000";
+      $('#colorDateText')[0].value="0xFF0000";
+    } else if($currentId == 6) {
+      $('#timeSize')[0].value=5;
+      $('#dateSize')[0].value=2;
+      $('#colorTimeBackground')[0].value="0x00AA55";
+      $('#colorTimeText')[0].value="0xFF0000";
+      $('#colorDateBackground')[0].value="0xFF0000";
+      $('#colorDateText')[0].value="0xFFFF00";
     }
+    
+    
 });
