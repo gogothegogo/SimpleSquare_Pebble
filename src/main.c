@@ -177,7 +177,7 @@ static void main_window_load(Window *window) {
   text_layer_set_font(s_time_layer, s_time_font);
   text_layer_set_background_color(s_time_layer, color_time_textlayer);
   text_layer_set_text_color(s_time_layer, color_time_text);
-  text_layer_set_text(s_time_layer, "0:00");
+  text_layer_set_text(s_time_layer, "12:48");
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
   
@@ -199,6 +199,7 @@ static void main_window_load(Window *window) {
       text_layer_set_text_color(s_date_layer, color_date_text);
       text_layer_set_background_color(s_date_layer, color_date_textlayer);
       text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
+      text_layer_set_text(s_date_layer, "1 May, Sun");
       layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
   }
   

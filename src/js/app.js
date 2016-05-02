@@ -3,7 +3,12 @@ Pebble.addEventListener('ready', function() {
 });
 
 Pebble.addEventListener('showConfiguration', function() {
-  var url = 'http://gogothegogo.github.io/SimpleSquare_Pebble/';
+  var url;
+  if (Pebble.getActiveWatchInfo().platform == "aplite") {
+    url = 'http://gogothegogo.github.io/SimpleSquare_Pebble/index_a.html';
+  } else {
+    url = 'http://gogothegogo.github.io/SimpleSquare_Pebble/index_b.html';
+  }
 
   console.log('Showing configuration page: ' + url);
 

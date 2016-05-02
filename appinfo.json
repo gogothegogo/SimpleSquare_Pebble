@@ -21,6 +21,13 @@
     "resources": {
         "media": [
             {
+                "file": "images/icon.png",
+                "menuIcon": true,
+                "name": "IMAGE_ICON",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
                 "characterRegex": "[ABCD]",
                 "file": "fonts/icons.ttf",
                 "name": "FONT_ICONS_16",
