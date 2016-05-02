@@ -99,11 +99,18 @@ $('.preset').click(function(e) {
   $('.preset').removeClass('current');
   $(this).addClass('current');
   if($currentId== 1) {
-    var $timeSize = $('#timeSize');
-    $timeSize[0].value = 1;
-    
+      $('#timeSize')[0].value=3;
+      $('#dateSize')[0].value=2;
+      $('#colorTimeBackground')[0].value="0x000000";
+      $('#colorTimeText')[0].value="0xFFFFFF";
+      $('#colorDateBackground')[0].value="0x000000";
+      $('#colorDateText')[0].value="0xFFFFFF";
     } else if($currentId == 2) {
-    $('#timeSize')[0].value = 2;
-      
+      $('#timeSize')[0].value=3;
+      $('#dateSize')[0].value=2;
+      $('#colorTimeBackground')[0].value="0xFFFFFF";
+      $('#colorTimeText')[0].value="0x000055";
+      $('#colorDateBackground')[0].value="0x000055";
+      $('#colorDateText')[0].value="0xFFFFFF";
     }
 });
