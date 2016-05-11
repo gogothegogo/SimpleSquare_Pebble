@@ -157,7 +157,7 @@ static void main_window_load(Window *window) {
     */
   
   // Create time TextLayer with specific bounds
-  if (settings[AppKeyTimeSize]==1) {
+    if (settings[AppKeyTimeSize]==1) {
     s_time_layer = text_layer_create(GRect(0, 52-time_position_offset_withdate, bounds.size.w, 50));
     s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TALLPIX_48));
   } else if (settings[AppKeyTimeSize]==2) {
@@ -177,7 +177,7 @@ static void main_window_load(Window *window) {
   text_layer_set_font(s_time_layer, s_time_font);
   text_layer_set_background_color(s_time_layer, color_time_textlayer);
   text_layer_set_text_color(s_time_layer, color_time_text);
-  text_layer_set_text(s_time_layer, "12:48");
+  text_layer_set_text(s_time_layer, "22:48");
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
   
@@ -313,11 +313,13 @@ static void init() {
   // Show the Window on the watch, with animated=true
   window_stack_push(s_main_window, true);
 
+#if DEBUG == 0
   // Make sure the time is displayed from the start
   update_time();
 
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+#endif
   
   if (settings[AppKeyBluetoothAlarm]>0) {
     // Register for Bluetooth connection updates

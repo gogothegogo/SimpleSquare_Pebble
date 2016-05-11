@@ -1,5 +1,6 @@
 #include <pebble.h>
 
+#define DEBUG 0
 #define COLOR_THEME 1 //0 debug mode text layer visible, 1 black with white text, 2 white with black text, 3 backgroung image
 #define TIME_SIZE 3 //1 tiny, 2 small, 3 medium, 4 large, 5 huge
 #define DATE_SIZE 2 //0 no date, 1 small, 2 medium, 3 large
